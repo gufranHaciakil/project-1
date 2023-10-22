@@ -1,41 +1,51 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Button, Card } from "flowbite-react";
 import CardComponents from "./CardComponents";
 import { v4 as uuidv4 } from "uuid";
 import { todoContexts } from "../../Contexts/TodoContexts";
 const MainPage = () => {
   const [inputValue, setInputValue] = useState("");
-  //const [updatedTodo, setUpdatedTodo] = useState({ title: "gufran" });
-  const MyContext = useContext(todoContexts);
-  console.log(MyContext.todoData.id);
+  const [todoTypeBtn, setTodoTypeBtn] = useState("copleted");
+  const { todoData, setTodoData } = useContext(todoContexts);
   function handleUpdateClick(updateId) {
-    const updateTodoArr = MyContext.todoData.map((it) => {
+    const updateTodoArr = todoData.map((it) => {
       if (it.id === updateId) {
         return console.log(it.id);
       }
       return it;
     });
-    MyContext.setTodoData(updateTodoArr);
+    setTodoData(updateTodoArr);
+    localStorage.setItem("Todos", JSON.stringify(updateTodoArr));
   }
   function handleDeleteClick(itemID) {
-    const itemIdd = MyContext.todoData.filter((i) => {
+    const itemIdd = todoData.filter((i) => {
       return i.id !== itemID;
     });
-    MyContext.setTodoData(itemIdd);
+    setTodoData(itemIdd);
+    localStorage.setItem("Todos", JSON.stringify(itemIdd));
+  }
+  const CopletedTodosType = todoData.filter((t) => {
+    return t.isCompleted;
+  });
+  const notCopletedTodosType = todoData.filter((t) => {
+    return !t.isCompleted;
+  });
+
+  let todosToBeRender = todoData;
+
+  if (todoTypeBtn === "copleted") {
+    todosToBeRender = CopletedTodosType;
+  } else if (todoTypeBtn === "notCopleted") {
+    todosToBeRender = notCopletedTodosType;
+  } else {
+    todosToBeRender = todoData;
   }
 
-  function test(itemId) {
-  
-
-    
-  }
-
-  const data = MyContext.todoData.map((item) => {
+  const data = todosToBeRender.map((item) => {
     return (
       <CardComponents
         key={item.id}
         item={item}
-        test={test}
         handleDeleteClick={handleDeleteClick}
         handleUpdateClick={handleUpdateClick}
       />
@@ -49,9 +59,17 @@ const MainPage = () => {
       detailse: "Lorem ..",
       isCompleted: false,
     };
-    MyContext.setTodoData([...MyContext.todoData, newTodo]);
+    const updateTodo = [...todoData, newTodo];
+    setTodoData(updateTodo);
+    localStorage.setItem("Todos", JSON.stringify(updateTodo));
     setInputValue("");
   }
+
+  useEffect(() => {
+    console.log("useEffect Changeddd");
+    const StorageTodos = JSON.parse(localStorage.getItem("Todos"));
+    setTodoData(StorageTodos);
+  }, []);
 
   return (
     <div className="px-3 animate-opacity">
@@ -60,9 +78,30 @@ const MainPage = () => {
           <p className="border-b-[1px] border-gray-600 pb-1">MY TO DO LIST</p>
         </h5>
         <Button.Group>
-          <Button color="gray">All</Button>
-          <Button color="gray">Done</Button>
-          <Button color="gray">Not accomplished</Button>
+          <Button
+            color="gray"
+            onClick={() => {
+              setTodoTypeBtn("all");
+            }}
+          >
+            All
+          </Button>
+          <Button
+            color="gray"
+            onClick={() => {
+              setTodoTypeBtn("copleted");
+            }}
+          >
+            Done
+          </Button>
+          <Button
+            color="gray"
+            onClick={() => {
+              setTodoTypeBtn("notCopleted");
+            }}
+          >
+            Not accomplished
+          </Button>
         </Button.Group>
 
         {data.length === 0 ? (

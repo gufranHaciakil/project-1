@@ -1,14 +1,24 @@
 import { Button, Modal } from "flowbite-react";
 import React, { useContext, useState } from "react";
 import { todoContexts } from "../../Contexts/TodoContexts";
-const CardComponents = ({ item, handleDeleteClick, handleUpdateClick }) => {
+const CardComponents = ({ item, handleDeleteClick }) => {
   const { todoData, setTodoData } = useContext(todoContexts);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const [inputValue, setInputValue] = useState({ title: "" });
+  const [inputValue, setInputValue] = useState({ title: item.title });
 
   function handleUpdateTodo() {
-    handleUpdateClick(item.id);
+    const updatetodoArr = todoData.map((t) => {
+      if (t.id === item.id) {
+        return { ...t, title: inputValue.title };
+      } else {
+        return t;
+      }
+    });
+    setTodoData(updatetodoArr);
+    localStorage.setItem("Todos", JSON.stringify(updatetodoArr));
+
+    setOpenUpdateModal(false);
   }
 
   function handleDeleteConfirm() {
@@ -24,7 +34,9 @@ const CardComponents = ({ item, handleDeleteClick, handleUpdateClick }) => {
       return t;
     });
     setTodoData(updateCompleted);
+    localStorage.setItem("Todos", JSON.stringify(updateCompleted));
   }
+
 
   return (
     <div>
@@ -46,7 +58,7 @@ const CardComponents = ({ item, handleDeleteClick, handleUpdateClick }) => {
                 htmlFor="floating_standard"
                 className="absolute text-xl text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-0 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
-                Title{" "}
+                Title
               </label>
             </div>
 
@@ -66,7 +78,6 @@ const CardComponents = ({ item, handleDeleteClick, handleUpdateClick }) => {
           </div>
         </Modal.Body>
       </Modal>
-
       <Modal show={openDeleteModal} size="md" popup className="animate-opacity">
         <Modal.Body className="h-fit p-6">
           <div className="text-center">
@@ -94,7 +105,10 @@ const CardComponents = ({ item, handleDeleteClick, handleUpdateClick }) => {
       </Modal>
       <div className="font-normal animate-opacity rounded-md hover:py-4 transition-all duration-200 text-gray-800 bg-zinc-300 flex gap-4 justify-between items-center px-4 py-2 dark:text-gray-400">
         <div>
-          <h1 className="text-gray-500 font-bold"> {item.title} </h1>
+          <h1 className="text-gray-500 font-bold animate-opacity">
+            {" "}
+            {item.title}{" "}
+          </h1>
         </div>
         <div className="flex gap-4">
           <div
