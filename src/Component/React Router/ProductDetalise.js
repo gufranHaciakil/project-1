@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { productData } from "./Products";
 
 export const ProductDetalise = () => {
-  //بجيب المتغير يلي حطستو بالرابط وبقارنو بالاي دي تبع البيانات تبعيتي
+  //بجيب المتغير يلي حطيتو بالرابط وبقارنو بالاي دي تبع البيانات تبعيتي
   const IdParams = useParams();
   const p = productData.find((item) => {
     return IdParams.id == item.id;

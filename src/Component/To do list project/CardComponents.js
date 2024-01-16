@@ -17,7 +17,6 @@ const CardComponents = ({ item, handleDeleteClick }) => {
     });
     setTodoData(updatetodoArr);
     localStorage.setItem("Todos", JSON.stringify(updatetodoArr));
-
     setOpenUpdateModal(false);
   }
 

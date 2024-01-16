@@ -4,6 +4,7 @@ import CardComponents from "./CardComponents";
 import { v4 as uuidv4 } from "uuid";
 import { todoContexts } from "../../Contexts/TodoContexts";
 const MainPage = () => {
+  //=================use
   const [inputValue, setInputValue] = useState("");
   const [todoTypeBtn, setTodoTypeBtn] = useState("copleted");
   const { todoData, setTodoData } = useContext(todoContexts);
@@ -29,7 +30,7 @@ const MainPage = () => {
   });
   const notCopletedTodosType = todoData.filter((t) => {
     return !t.isCompleted;
-  });
+  }); 
 
   let todosToBeRender = todoData;
 
